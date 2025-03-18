@@ -1,0 +1,104 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #0a0a2a;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(45deg, #0a0a2a, #1a1a4a);
+    color: #00ffff;
+}
+
+.game-container {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+canvas {
+    background-color: rgba(10, 10, 42, 0.8);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 255, 0.2);
+}
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(45deg, #00ccff, #0066ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+button:hover:before {
+    left: 100%;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 204, 255, 0.4);
+}
+
+button:disabled {
+    background: linear-gradient(45deg, #666, #999);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.status {
+    color: #00ffff;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.status p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+#ballCount, #currentRing {
+    color: #ff00ff;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+} 
