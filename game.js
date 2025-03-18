@@ -532,7 +532,7 @@ class Game {
             this.ctx.font = '24px Arial';
             this.ctx.fillStyle = 'white';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText(`Score: ${this.score}`, 0, -350);
+            this.ctx.fillText(`GAINS : ${(this.score / 100).toFixed(2)}€`, 0, -350);
         }
 
         // Dessiner l'animation du bonus si elle est active
