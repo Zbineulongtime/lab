@@ -1,100 +1,1176 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu des Anneaux</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Styles pour les segments bonus */
-        .bonus-segment {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            transform-origin: center;
-        }
+  <meta charset="UTF-8">
+  <title>Pirat Swords</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Special+Elite&display=swap');
 
-        .bonus-3 {
-            background: linear-gradient(45deg, rgba(255,215,0,0.8), rgba(255,180,0,0.8));
-            filter: drop-shadow(0 0 15px rgba(255,215,0,0.6));
-            animation: glowGold 2s infinite alternate;
-        }
+    body {
+      font-family: 'Special Elite', cursive;
+      background: #1a1a2e url('piratfond.png') center/cover fixed;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      min-height: 100vh;
+    }
 
-        .bonus-15 {
-            background: linear-gradient(45deg, rgba(255,0,255,0.8), rgba(200,0,200,0.8));
-            filter: drop-shadow(0 0 15px rgba(255,0,255,0.6));
-            animation: glowPurple 2s infinite alternate;
-        }
+    h1 {
+      text-align: center;
+      margin: 10px 0;
+      font-family: 'Pirata One', cursive;
+      font-size: 2.5em;
+      color: #ffd700;
+      text-shadow: 3px 3px 0 #8b0000,
+                   6px 6px 0 rgba(0,0,0,0.3);
+      letter-spacing: 4px;
+    }
 
-        @keyframes glowGold {
-            from {
-                filter: drop-shadow(0 0 10px rgba(255,215,0,0.6));
-            }
-            to {
-                filter: drop-shadow(0 0 25px rgba(255,215,0,0.8));
-            }
-        }
+    .game-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      height: 95vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
 
-        @keyframes glowPurple {
-            from {
-                filter: drop-shadow(0 0 10px rgba(255,0,255,0.6));
-            }
-            to {
-                filter: drop-shadow(0 0 25px rgba(255,0,255,0.8));
-            }
-        }
+    .regles-jeu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 15px;
+      max-width: 300px;
+      color: #ffd700;
+      font-size: 0.9em;
+      line-height: 1.4;
+      text-shadow: 1px 1px 0 #8b0000;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      z-index: 100;
+      transition: all 0.3s;
+    }
 
-        .bonus-text {
-            position: absolute;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
-            animation: pulse 1.5s infinite;
-        }
+    .regles-jeu:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+    .regles-jeu h3 {
+      margin: 0 0 10px 0;
+      text-align: center;
+      font-family: 'Pirata One', cursive;
+      color: #ffd700;
+      font-size: 1.2em;
+      text-shadow: 2px 2px 0 #8b0000;
+    }
 
-        /* Effet de particules */
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+    .regles-jeu p {
+      margin: 0;
+    }
 
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: float 3s infinite;
-        }
+    .barrel-container {
+      position: relative;
+      text-align: center;
+      margin: 10px 0;
+      height: 100px;
+    }
 
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-20px) scale(0); opacity: 0; }
-        }
-    </style>
+    .barrel {
+      position: relative;
+      display: inline-block;
+      font-size: 4em;
+      transform: rotate(-15deg);
+      filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.5));
+      transition: all 0.3s;
+      z-index: 5;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .barrel:hover {
+      transform: rotate(-15deg) scale(1.1);
+      filter: drop-shadow(8px 8px 8px rgba(0,0,0,0.7));
+      animation: shake 0.5s ease-in-out;
+    }
+
+    .sword {
+      position: absolute;
+      font-size: 2em;
+      transition: all 0.5s;
+      filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+      z-index: 10;
+      animation: swordAppear 0.5s ease-out;
+    }
+
+    .sword.argent { 
+      color: #C0C0C0;
+      text-shadow: 0 0 10px rgba(192, 192, 192, 0.8);
+    }
+    .sword.or { 
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    .sword.maudite { 
+      color: #FF0000;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 2em;
+      margin: 10px 0;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #8b0000;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+      display: inline-block;
+      min-width: 250px;
+      border: 2px solid #ffd700;
+    }
+
+    .timer.active {
+      animation: pulse 1s infinite;
+      color: #ff4444;
+      border-color: #ff4444;
+    }
+
+    .tour-info {
+      text-align: center;
+      font-size: 1.2em;
+      margin: 5px 0;
+      color: #ffd700;
+      text-shadow: 2px 2px 0 #8b0000;
+    }
+
+    .tour-info.pause {
+      color: #ffaa00;
+      animation: pulse 1s infinite;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+      flex-wrap: nowrap;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .player-zone {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      width: 25%;
+      min-width: 200px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+      gap: 5px;
+    }
+
+    .player-image {
+      width: 150px;
+      height: 150px;
+      margin: 5px 0 0 0;
+      border: 2px solid #ffd700;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .player-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .player-barrel {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 5px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .player-barrel .barrel {
+      font-size: 2.5em;
+    }
+
+    .player-barrel .swords {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    .player-barrel .sword {
+      position: absolute;
+      font-size: 1.2em;
+      transition: all 0.3s;
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
+      z-index: 10;
+    }
+
+    .player-barrel .sword.argent { 
+      color: #C0C0C0;
+      text-shadow: 0 0 5px rgba(192, 192, 192, 0.8);
+    }
+    .player-barrel .sword.or { 
+      color: #FFD700;
+      text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+    }
+    .player-barrel .sword.maudite { 
+      color: #FF0000;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    }
+
+    .player-zone.humain {
+      border-color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .player-zone.elimine {
+      opacity: 0.5;
+      border-color: #ff4444;
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+    }
+
+    .player-zone.retrait {
+      opacity: 0.7;
+      border-color: #ffaa00;
+      box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+    }
+
+    .player-zone.victoire {
+      border-color: #ffd700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      animation: victoire 2s infinite;
+      position: relative;
+    }
+
+    .player-zone.victoire::after {
+      content: '🏆 VICTOIRE !';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ffd700;
+      padding: 5px 15px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #8b0000;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      z-index: 100;
+    }
+
+    .player-title {
+      font-family: 'Pirata One', cursive;
+      font-size: 1.2em;
+      color: #ffd700;
+      margin-bottom: 5px;
+      text-shadow: 2px 2px 0 #8b0000;
+    }
+
+    .score {
+      font-size: 1.5em;
+      margin: 5px 0;
+      color: #ffd700;
+      text-shadow: 2px 2px 0 #8b0000;
+      position: relative;
+      display: inline-block;
+    }
+
+    .score::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffd700, transparent);
+    }
+
+    .etat {
+      margin: 5px 0;
+      font-size: 1em;
+      padding: 3px 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      min-width: 80px;
+      text-align: center;
+      border: 1px solid;
+    }
+
+    .etat.enjeu { border-color: #4CAF50; color: #4CAF50; }
+    .etat.elimine { border-color: #ff4444; color: #ff4444; }
+    .etat.retrait { border-color: #ffaa00; color: #ffaa00; }
+
+    .actions button {
+      margin: 5px 0;
+      width: 200px;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Special Elite', cursive;
+      text-shadow: 1px 1px 0 #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .actions button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+    .actions button.selected {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      animation: pulse 1s infinite;
+    }
+
+    .argent { 
+      background: linear-gradient(45deg, #C0C0C0, #E0E0E0);
+      color: #000;
+      border: 2px solid #A0A0A0;
+    }
+    .argent:hover:not(:disabled) { 
+      background: linear-gradient(45deg, #D0D0D0, #F0F0F0);
+      transform: translateY(-2px);
+    }
+
+    .or { 
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: #000;
+      border: 2px solid #DAA520;
+    }
+    .or:hover:not(:disabled) { 
+      background: linear-gradient(45deg, #FFE700, #FFB500);
+      transform: translateY(-2px);
+    }
+
+    .maudite { 
+      background: linear-gradient(45deg, #8B0000, #FF0000);
+      color: #fff;
+      border: 2px solid #600;
+    }
+    .maudite:hover:not(:disabled) { 
+      background: linear-gradient(45deg, #9B0000, #FF1111);
+      transform: translateY(-2px);
+    }
+
+    .retrait-btn { 
+      background: linear-gradient(45deg, #2c3e50, #34495e);
+      color: #fff;
+      border: 2px solid #2c3e50;
+    }
+    .retrait-btn:hover:not(:disabled) { 
+      background: linear-gradient(45deg, #34495e, #2c3e50);
+      transform: translateY(-2px);
+    }
+
+    .event-log {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      margin: 10px auto;
+      max-width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      font-size: 0.9em;
+      overflow-y: auto;
+      height: 120px;
+      line-height: 1.4;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+      position: relative;
+    }
+
+    .event-log strong { color: #ffd700; }
+
+    .event-log::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 1200px) {
+      .game-container {
+        height: auto;
+        min-height: 95vh;
+      }
+      .container {
+        flex-wrap: wrap;
+      }
+      .player-zone {
+        width: 45%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .container { 
+        flex-direction: column; 
+        align-items: center; 
+      }
+      .player-zone { 
+        width: 90%; 
+      }
+    }
+
+    .controls {
+      text-align: center;
+      margin: 20px 0;
+      color: #ffd700;
+      font-size: 1.1em;
+    }
+
+    .controls kbd {
+      background: #333;
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid #666;
+    }
+
+    @keyframes explode {
+      0% { transform: rotate(-15deg) scale(1); }
+      50% { transform: rotate(-15deg) scale(1.2); }
+      100% { transform: rotate(-15deg) scale(1); }
+    }
+
+    /* Animations et effets visuels */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes glow {
+      0% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
+      50% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+      100% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
+    }
+
+    @keyframes shake {
+      0% { transform: rotate(-15deg) translateX(0); }
+      25% { transform: rotate(-15deg) translateX(-5px); }
+      75% { transform: rotate(-15deg) translateX(5px); }
+      100% { transform: rotate(-15deg) translateX(0); }
+    }
+
+    .player-zone::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 215, 0, 0.1),
+        transparent
+      );
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    @keyframes swordAppear {
+      0% { 
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      50% { 
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+      }
+      100% { 
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes swordPlant {
+      0% { transform: scale(0) rotate(0deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
+    }
+
+    .points-popup {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #ffd700;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #8b0000;
+      border: 1px solid #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      opacity: 0;
+      animation: popupAppear 10s ease-out forwards;
+      z-index: 20;
+    }
+
+    .explosion-popup {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(139, 0, 0, 0.8);
+      color: #ff4444;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #000;
+      border: 1px solid #ff4444;
+      box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+      opacity: 0;
+      animation: popupAppear 10s ease-out forwards;
+      z-index: 20;
+    }
+
+    .sword-info {
+      font-size: 1em;
+      margin-top: 8px;
+      opacity: 1;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 5px;
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.8);
+      color: #FFFFFF;
+    }
+
+    .sword-info.argent { 
+      border: 1px solid #C0C0C0;
+    }
+    .sword-info.or { 
+      border: 1px solid #FFD700;
+    }
+    .sword-info.maudite { 
+      border: 1px solid #FF0000;
+    }
+
+    @keyframes popupAppear {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+      }
+      5% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      98% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+    }
+
+    @keyframes victoire {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .fin-partie-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      color: #ffd700;
+      padding: 20px 40px;
+      border-radius: 15px;
+      font-size: 1.5em;
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 0 #8b0000;
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      z-index: 1000;
+      animation: messageVictoire 0.5s ease-out;
+    }
+
+    @keyframes messageVictoire {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <div class="game-container">
-        <canvas id="gameCanvas"></canvas>
-        <div class="controls">
-            <button id="placeBalls">Placer les billes</button>
-            <button id="spin">Tourner</button>
-        </div>
-        <div class="status">
-            <p style="color: cyan;">Billes restantes à placer : <span id="ballsToPlace">12</span></p>
-            <p>Billes restantes au total : <span id="ballCount">12</span></p>
-            <p>Anneau actuel: <span id="currentRing">1</span>/3</p>
-        </div>
+  <div class="game-container">
+    <div class="regles-jeu">
+      <h3>🏴‍☠️ Règles du Jeu 🏴‍☠️</h3>
+      <p>A chaque tour, choisissez une épée à planter dans le tonneau et cumulez des points. Mais attention, plus l'épée peut donner de points, plus elle donne un risque d'explosion et de perdre la partie. Le gagnant est celui qui arrive en premier à 20 points ou qui est le dernier survivant.</p>
     </div>
-    <script src="game.js"></script>
+    <h1>🏴‍☠️ Pirat Swords 🏴‍☠️</h1>
+    
+    <div class="barrel-container">
+      <div class="barrel">🛢️</div>
+    </div>
+
+    <div class="tour-info" id="tourInfo">Tour 1</div>
+    <div style="text-align: center;">
+      <div class="timer" id="timer">Temps restant : 7s</div>
+    </div>
+
+    <div class="container" id="players"></div>
+    <div class="event-log" id="log"></div>
+
+    <div class="controls">
+      <strong>Raccourci :</strong> <kbd>Ctrl</kbd>+<kbd>R</kbd> pour recommencer la partie.<br>
+      <span style="font-size:0.9em;">Jeu local, aucune donnée n'est transmise.</span>
+    </div>
+  </div>
+
+  <script>
+    // --- Paramètres du jeu ---
+    const EPEES = [
+      {
+        nom: "Épée d'Argent",
+        icone: "⚪",
+        classe: "argent",
+        risque: 0.05,
+        pointsMin: 1,
+        pointsMax: 3
+      },
+      {
+        nom: "Épée d'Or",
+        icone: "🟡",
+        classe: "or",
+        risque: 0.15,
+        pointsMin: 1,
+        pointsMax: 6
+      },
+      {
+        nom: "Épée Maudite",
+        icone: "🔴",
+        classe: "maudite",
+        risque: 0.35,
+        pointsMin: 1,
+        pointsMax: 12
+      }
+    ];
+    const NB_JOUEURS = 4;
+    const MISE = 1; // € par joueur
+    const TEMPS_TOUR = 8; // secondes par tour
+    const JOUEUR_HUMAIN = 0; // index du joueur humain (0-3)
+
+    // --- État du jeu ---
+    let joueurs = [];
+    let tour = 1;
+    let journal = [];
+    let jeuFini = false;
+    let tempsRestant = TEMPS_TOUR;
+    let timerInterval = null;
+    let joueurActuel = 0;
+    let actionsEnCours = []; // Pour stocker toutes les actions en cours avant révélation
+
+    function initJoueurs() {
+      joueurs = [];
+      for (let i = 0; i < NB_JOUEURS; i++) {
+        joueurs.push({
+          nom: i === JOUEUR_HUMAIN ? "Vous" : "Bot " + i,
+          score: 0,
+          etat: "enjeu",
+          id: i,
+          estHumain: i === JOUEUR_HUMAIN,
+          epéesPlantées: [] // Nouveau tableau pour suivre les épées plantées
+        });
+      }
+    }
+
+    function demarrerTour() {
+      if (jeuFini) return;
+      
+      // Réinitialise les actions pour le nouveau tour
+      actionsEnCours = [];
+      
+      document.getElementById('tourInfo').textContent = `Tour ${tour}`;
+      tempsRestant = TEMPS_TOUR;
+      updateTimer();
+
+      // Fait jouer tous les bots immédiatement
+      joueurs.forEach((joueur, idx) => {
+        if (!joueur.estHumain && joueur.etat === 'enjeu') {
+          const decision = decisionBot(idx);
+          if (decision === -1) {
+            preparerRetrait(idx);
+          } else {
+            preparerEpee(idx, decision);
+          }
+        }
+      });
+    }
+
+    function updateTimer() {
+      const timerDiv = document.getElementById('timer');
+      timerDiv.textContent = `Temps restant : ${tempsRestant}s`;
+      timerDiv.className = 'timer' + (tempsRestant <= 3 ? ' active' : '');
+
+      if (tempsRestant <= 0) {
+        // À la fin du timer, on exécute toutes les actions en attente
+        executerActions();
+        return;
+      }
+
+      tempsRestant--;
+      timerInterval = setTimeout(updateTimer, 1000);
+    }
+
+    function decisionBot(joueurIdx) {
+      const joueur = joueurs[joueurIdx];
+      const score = joueur.score;
+      
+      // Stratégie simple : plus le score est élevé, plus on est prudent
+      if (score >= 15) return 0;  // Épée d'Argent
+      if (score >= 10) return 1;  // Épée d'Or
+      return 2;                   // Épée Maudite
+    }
+
+    // --- Affichage ---
+    function render() {
+      const playersDiv = document.getElementById('players');
+      playersDiv.innerHTML = '';
+      joueurs.forEach((j, idx) => {
+        const zone = document.createElement('div');
+        zone.className = 'player-zone ' + 
+          (j.etat === 'elimine' ? 'elimine' : '') +
+          (j.estHumain ? ' humain' : '');
+        
+        // Titre
+        const titre = document.createElement('div');
+        titre.className = 'player-title';
+        titre.textContent = j.nom;
+        zone.appendChild(titre);
+
+        // Tonneau du joueur
+        const barrelContainer = document.createElement('div');
+        barrelContainer.className = 'player-barrel';
+        
+        const barrel = document.createElement('div');
+        barrel.className = 'barrel';
+        barrel.textContent = '🛢️';
+        barrelContainer.appendChild(barrel);
+
+        const swordsContainer = document.createElement('div');
+        swordsContainer.className = 'swords';
+        barrelContainer.appendChild(swordsContainer);
+
+        // Ajoute les épées plantées
+        if (j.epéesPlantées) {
+          j.epéesPlantées.forEach((epee, index) => {
+            const sword = document.createElement('div');
+            sword.className = `sword ${epee.classe}`;
+            sword.innerHTML = '⚔️';
+            sword.style.left = `${Math.random() * 60 + 20}%`;
+            sword.style.top = `${Math.random() * 60 + 20}%`;
+            sword.style.transform = `rotate(${Math.random() * 360}deg)`;
+            swordsContainer.appendChild(sword);
+          });
+        }
+
+        zone.appendChild(barrelContainer);
+
+        // Score
+        const score = document.createElement('div');
+        score.className = 'score';
+        score.textContent = j.score + " pts";
+        zone.appendChild(score);
+
+        // État
+        const etat = document.createElement('div');
+        etat.className = 'etat ' + j.etat;
+        etat.textContent = j.etat === 'enjeu' ? "En jeu" : "Éliminé";
+        zone.appendChild(etat);
+
+        // Actions
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        if (j.etat === 'enjeu' && !jeuFini) {
+          EPEES.forEach((epee, eid) => {
+            const btn = document.createElement('button');
+            btn.className = epee.classe;
+            btn.innerHTML = `${epee.icone} ${epee.nom}<br><span class="sword-info ${epee.classe}">${epee.pointsMin} ↔ ${epee.pointsMax} points</span>`;
+            btn.onclick = () => jouerEpee(idx, eid);
+            actions.appendChild(btn);
+          });
+        } else {
+          // Désactive les boutons
+          EPEES.forEach((epee) => {
+            const btn = document.createElement('button');
+            btn.className = epee.classe;
+            btn.innerHTML = `${epee.icone} ${epee.nom}<br><span class="sword-info ${epee.classe}">${epee.pointsMin} ↔ ${epee.pointsMax} points</span>`;
+            btn.disabled = true;
+            actions.appendChild(btn);
+          });
+        }
+        zone.appendChild(actions);
+
+        // Image du joueur
+        const playerImage = document.createElement('div');
+        playerImage.className = 'player-image';
+        const img = document.createElement('img');
+        img.src = `pirat${idx + 1}.png`;
+        img.alt = j.nom;
+        playerImage.appendChild(img);
+        zone.appendChild(playerImage);
+
+        playersDiv.appendChild(zone);
+      });
+      // Journal
+      renderLog();
+    }
+
+    function renderLog() {
+      const logDiv = document.getElementById('log');
+      logDiv.innerHTML = journal.map(e => e).join('<br>');
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // --- Logique du jeu ---
+    function preparerEpee(joueurIdx, epeeIdx) {
+      if (jeuFini) return;
+      const joueur = joueurs[joueurIdx];
+      const epee = EPEES[epeeIdx];
+      if (joueur.etat !== 'enjeu') return;
+
+      // Vérifie si une action existe déjà pour ce joueur
+      const actionExistante = actionsEnCours.findIndex(a => a.joueur === joueurIdx);
+      if (actionExistante !== -1) {
+        actionsEnCours.splice(actionExistante, 1);
+      }
+
+      // Ajoute l'épée visuellement avec plus d'effets
+      const barrelContainer = document.querySelector('.barrel-container');
+      const sword = document.createElement('div');
+      sword.className = `sword ${epee.classe}`;
+      sword.innerHTML = '⚔️';
+      
+      // Position aléatoire plus dynamique
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 100 + 50;
+      const x = Math.cos(angle) * distance;
+      const y = Math.sin(angle) * distance;
+      
+      sword.style.left = `calc(50% + ${x}px)`;
+      sword.style.top = `calc(50% + ${y}px)`;
+      sword.style.transform = `rotate(${Math.random() * 360}deg)`;
+      
+      barrelContainer.appendChild(sword);
+
+      // Animation plus élaborée
+      setTimeout(() => {
+        sword.style.transform = `rotate(${Math.random() * 360}deg) scale(1.5)`;
+        sword.style.opacity = '0';
+        sword.style.filter = 'blur(5px)';
+        setTimeout(() => sword.remove(), 500);
+      }, 100);
+
+      // Effet de secousse sur le tonneau
+      const barrel = document.querySelector('.barrel');
+      barrel.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        barrel.style.animation = 'float 3s ease-in-out infinite';
+      }, 500);
+
+      actionsEnCours.push({
+        type: 'epee',
+        joueur: joueurIdx,
+        epee: epeeIdx,
+        explose: Math.random() < epee.risque,
+        points: randInt(epee.pointsMin, epee.pointsMax)
+      });
+
+      // Ne modifie les boutons que pour le joueur humain
+      if (joueur.estHumain) {
+        const zone = document.querySelector(`.player-zone:nth-child(${joueurIdx + 1}) .actions`);
+        if (zone) {
+          const boutons = zone.querySelectorAll('button');
+          boutons.forEach((btn, idx) => {
+            btn.style.transition = 'all 0.3s';
+            if (idx === epeeIdx) {
+              btn.classList.add('selected');
+              btn.style.opacity = '1';
+              btn.style.filter = 'none';
+            } else {
+              btn.style.opacity = '0.3';
+              btn.style.filter = 'grayscale(1)';
+            }
+            btn.disabled = true;
+          });
+        }
+      }
+    }
+
+    function preparerRetrait(joueurIdx) {
+      if (jeuFini) return;
+      const joueur = joueurs[joueurIdx];
+      if (joueur.etat !== 'enjeu') return;
+
+      // Vérifie si une action existe déjà pour ce joueur
+      const actionExistante = actionsEnCours.findIndex(a => a.joueur === joueurIdx);
+      if (actionExistante !== -1) {
+        actionsEnCours.splice(actionExistante, 1);
+      }
+
+      actionsEnCours.push({
+        type: 'retrait',
+        joueur: joueurIdx
+      });
+
+      // Désactive les boutons pour ce joueur spécifique
+      const zone = document.querySelector(`.player-zone:nth-child(${joueurIdx + 1}) .actions`);
+      if (zone) {
+        const boutons = zone.querySelectorAll('button');
+        boutons.forEach(btn => btn.disabled = true);
+      }
+    }
+
+    function executerActions() {
+      actionsEnCours.forEach((action, index) => {
+        setTimeout(() => {
+          const { type, joueur } = action;
+          const joueurObj = joueurs[joueur];
+
+          if (type === 'epee') {
+            const { epee, explose, points } = action;
+            const epeeObj = EPEES[epee];
+
+            if (explose) {
+              // Animation d'explosion plus élaborée
+              const barrel = document.querySelector(`.player-zone:nth-child(${joueur + 1}) .barrel`);
+              barrel.style.animation = 'explode 0.5s';
+              
+              // Effet de particules
+              const barrelContainer = document.querySelector(`.player-zone:nth-child(${joueur + 1}) .player-barrel`);
+              for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                  position: absolute;
+                  width: 10px;
+                  height: 10px;
+                  background: #ff4444;
+                  border-radius: 50%;
+                  left: 50%;
+                  top: 50%;
+                  transform: translate(-50%, -50%);
+                  animation: particle 0.5s ease-out forwards;
+                `;
+                barrelContainer.appendChild(particle);
+                setTimeout(() => particle.remove(), 500);
+              }
+
+              // Ajoute le popup d'explosion
+              const popup = document.createElement('div');
+              popup.className = 'explosion-popup';
+              popup.textContent = '💥 Explosion, éliminé !';
+              barrelContainer.appendChild(popup);
+
+              // Supprime le popup après l'animation
+              setTimeout(() => {
+                popup.remove();
+              }, 10000);
+
+              setTimeout(() => {
+                barrel.style.animation = '';
+              }, 500);
+
+              joueurObj.etat = 'elimine';
+              joueurObj.score = 0;
+              joueurObj.epéesPlantées = []; // Réinitialise les épées plantées
+              journal.push(`<strong>${joueurObj.nom}</strong> a tenté ${epeeObj.icone} <em>${epeeObj.nom}</em>... 💥 <span style="color:#ff4444">Explosion !</span> Il est éliminé et perd ses points.`);
+            } else {
+              joueurObj.score += points;
+              // Ajoute l'épée plantée
+              if (!joueurObj.epéesPlantées) joueurObj.epéesPlantées = [];
+              joueurObj.epéesPlantées.push(epeeObj);
+              journal.push(`<strong>${joueurObj.nom}</strong> a planté ${epeeObj.icone} <em>${epeeObj.nom}</em> : +${points} points !`);
+
+              // Ajoute le popup de points
+              const barrelContainer = document.querySelector(`.player-zone:nth-child(${joueur + 1}) .player-barrel`);
+              const popup = document.createElement('div');
+              popup.className = 'points-popup';
+              popup.textContent = `+${points} points !`;
+              barrelContainer.appendChild(popup);
+
+              // Supprime le popup après l'animation
+              setTimeout(() => {
+                popup.remove();
+              }, 10000);
+            }
+          } else if (type === 'retrait') {
+            joueurObj.etat = 'retrait';
+            journal.push(`<strong>${joueurObj.nom}</strong> se retire prudemment avec <strong>${joueurObj.score} pts</strong>.`);
+          }
+        }, index * 300);
+      });
+
+      setTimeout(() => {
+        actionsEnCours = [];
+        render();
+        
+        verifierFinTour();
+        
+        if (!jeuFini) {
+          tour++;
+          demarrerTour();
+        }
+      }, actionsEnCours.length * 300);
+    }
+
+    function jouerEpee(joueurIdx, epeeIdx) {
+      preparerEpee(joueurIdx, epeeIdx);
+    }
+
+    function retirerJoueur(joueurIdx) {
+      preparerRetrait(joueurIdx);
+    }
+
+    function verifierFinTour() {
+      // Vérifie si un joueur a atteint 20 points
+      const gagnantPoints = joueurs.find(j => j.score >= 20);
+      if (gagnantPoints) {
+        // Ajoute la classe victoire à la zone du joueur
+        const zoneGagnant = document.querySelector(`.player-zone:nth-child(${gagnantPoints.id + 1})`);
+        if (zoneGagnant) {
+          zoneGagnant.classList.add('victoire');
+        }
+        
+        // Ajoute le message de fin de partie
+        const messageFin = document.createElement('div');
+        messageFin.className = 'fin-partie-message';
+        messageFin.innerHTML = `🏆 FIN DE LA PARTIE !<br><br><strong>${gagnantPoints.nom}</strong> a atteint ${gagnantPoints.score} points<br>et remporte la cagnotte de <strong>${NB_JOUEURS * MISE} €</strong> !`;
+        document.body.appendChild(messageFin);
+        
+        journal.push(`<span style="color:#1a7; font-size:1.2em; font-weight:bold;"><strong>${gagnantPoints.nom}</strong> atteint ${gagnantPoints.score} points et remporte la cagnotte de <strong>${NB_JOUEURS * MISE} €</strong> !</span>`);
+        jeuFini = true;
+        render();
+        return;
+      }
+
+      // Vérifie si la partie est terminée
+      const enJeu = joueurs.filter(j => j.etat === 'enjeu');
+      const elimines = joueurs.filter(j => j.etat === 'elimine');
+      
+      // Un seul survivant
+      if (enJeu.length === 1 && elimines.length === NB_JOUEURS - 1) {
+        const gagnant = enJeu[0];
+        journal.push(`<span style="color:#1a7"><strong>${gagnant.nom}</strong> est le dernier survivant et remporte la cagnotte de <strong>${NB_JOUEURS * MISE} €</strong> !</span>`);
+        jeuFini = true;
+        render();
+        return;
+      }
+      // Plus personne en jeu (tous éliminés)
+      if (enJeu.length === 0) {
+        journal.push(`<span style="color:#c00">Tous les joueurs ont explosé ! Personne ne remporte la cagnotte...</span>`);
+        jeuFini = true;
+        render();
+        return;
+      }
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // --- Initialisation ---
+    function nouvellePartie() {
+      initJoueurs();
+      tour = 1;
+      journal = [
+        `<span style="color:#555">Début de la partie ! Chaque joueur mise <strong>1 €</strong>. Le gagnant remportera <strong>${NB_JOUEURS * MISE} €</strong>.</span>`
+      ];
+      jeuFini = false;
+      render();
+      demarrerTour();
+    }
+
+    // --- Lancement ---
+    nouvellePartie();
+
+    // --- Redémarrage rapide ---
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'r' && e.ctrlKey) {
+        e.preventDefault();
+        if (confirm("Redémarrer la partie ?")) nouvellePartie();
+      }
+    });
+
+    // Ajout de l'animation des particules
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes particle {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(
+            calc(-50% + ${Math.random() * 200 - 100}px),
+            calc(-50% + ${Math.random() * 200 - 100}px)
+          ) scale(0);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html> 
